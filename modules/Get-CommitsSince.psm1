@@ -10,8 +10,8 @@ function Get-CommitsSince {
 
     $headers = @{
         Authorization = "Bearer $token"
-        "User-Agent" = "PowerShell"
         Accept = "application/vnd.github.v3+json"
+        "X-GitHub-Api-Version" = "2026-03-10"
     }
 
     try {

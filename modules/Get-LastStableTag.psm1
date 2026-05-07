@@ -9,8 +9,8 @@ function Get-LastStableTag {
     $tagsUrl = "$githubApiUrl/repos/$owner/$repo/tags?per_page=100"
     $headers = @{
         Authorization = "Bearer $token"
-        "User-Agent" = "PowerShell"
         Accept = "application/vnd.github.v3+json"
+        "X-GitHub-Api-Version" = "2026-03-10"
     }
 
     try {
