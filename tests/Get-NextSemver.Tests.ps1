@@ -1,27 +1,4 @@
-# Mock GitHub API server using built-in .NET HttpListener
-# No external dependencies required
-
-param(
-    [int]$Port = 3000
-)
-
-$listener = New-Object System.Net.HttpListener
-$listener.Prefixes.Add("http://127.0.0.1:$Port/")
-$listener.Start()
-
-Write-Host "Mock server listening on http://127.0.0.1:$Port..." -ForegroundColor Green
-
-try {
-    while ($listener.IsListening) {
-        $context = $listener.GetContext()
-        $request = $context.Request
-        $response = $context.Response
-        
-        $path = $request.Url.LocalPath
-        $method = $request.HttpMethod
-        
-        Write-Host "Mock intercepted: $method $path" -ForegroundColor Cyan
-        Import-Module "$PSScriptRoot/../modules/Get-NextSemver.psm1" -Force
+Import-Module "$PSScriptRoot/../modules/Get-NextSemver.psm1" -Force
 
 Describe "Get-NextSemver parameter validation" {
     BeforeEach {
