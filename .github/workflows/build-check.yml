@@ -48,15 +48,18 @@ jobs:
       - name: Run Pester Unit Tests
         shell: pwsh
         run: |
-          Invoke-Pester -Path ./tests/action.Tests.ps1
+          Invoke-Pester -Path ./tests/All.Tests.ps1
 
       - name: Run Integration Tests
         id: integration-tests
         uses: ./
         with:
-          input-1: 1
-          input-2: 2
-          input-3: 3
+          prerelease: 'true'
+          prerelease-identifier: 'test'
+          owner: 'test-owner'
+          repo-name: 'test-repo'
+          token: 'token'
+          branch: 'test'
         env:
           MOCK_API: http://127.0.0.1:3000
 
@@ -64,7 +67,9 @@ jobs:
         shell: pwsh
         run: |
           if (
-             "${{ steps.integration-tests.outputs.result }}" -eq "success"      
+              "${{ steps.integration-tests.outputs.version-number }}" -eq "2.0.0-test.4" -and
+              "${{ steps.integration-tests.outputs.version-tag }}" -eq "v2.0.0-test.4" -and
+              "${{ steps.integration-tests.outputs.release-type }}" -eq "major"
            ) {
              Write-Host "Test passed: Integration test simulated successfully."
            } else {

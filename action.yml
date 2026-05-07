@@ -1,36 +1,69 @@
-name: GitHub Action Name
-description: A GitHub Action Descriptionto Open a specified GitHub issue using the GitHub API
+name: Get Next Semantic Version Number
+description: A GitHub Action to calculate the next semantic version number based on conventional commits
 author: Lee Lott
 
 inputs:
-  input-1:
-    description: 'Description of input'
+  prerelease:
+    description: 'Mark the release as a pre-release (true/false)'
     required: true
-  input-2:
-    description: 'Description of input'
+  prerelease-identifier:
+    description: 'The name to append to the version number on releases that are marked as pre-release.'
     required: true
-  input-3:
-    description: 'Description of input'
+  owner:
+    description: 'The owner of the template and new repository (user or organization)'
     required: true
-
+  repo-name:
+    description: 'The name of the repository'
+    required: true
+  branch:
+    description: 'The name of the branch to analyze for commits'
+    required: true
+  use-leading-zeros:
+    description: 'Whether to pad the numeric prerelease identifier with leading zeros (true/false).'
+    required: false
+    default: false
+  number-of-leading-zeros:
+    description: 'The total width for the numeric prerelease identifier when leading zeros are enabled.'
+    required: false
+    default: 4
+  token:
+    description: 'GitHub token with repository write access'
+    required: true
+    
 outputs:
+  version-number:
+    description: 'The next semantic version'
+    value: ${{ steps.action.outputs.version }}
+  version-tag:
+    description: 'The next version tag'
+    value: ${{ steps.action.outputs.version_tag }}
+  release-type:
+    description: 'Bump type (major, minor, patch, none)'
+    value: ${{ steps.action.outputs.release_type }}
   result:
-    description: 'Result of the action ("success" or "failure")'
+    description: 'Result of getting the next version number ("success" or "failure")'
     value: ${{ steps.action.outputs.result }}
   error-message:
-    description: 'Error message if the action fails'
+    description: 'Error message if there is a failure to get the next version number'
     value: ${{ steps.action.outputs.error-message }}
-
+    
 runs:
-  using: composite
+  using: "composite"
   steps:
-    - name: Action Name
+    - name: Get Next Semantic Version Number
       id: action
       shell: pwsh
-      run: |        
-        . "${{ github.action_path }}/action.ps1"
-        run_action `
-          -Input1 "${{ inputs.input-1 }}" `
-          -Input2 "${{ inputs.input-2 }}" `
-          -Inpute3 "${{ inputs.input-3 }}" `
-      
+      run: |
+        $useLeadingZeros = [System.Convert]::ToBoolean("${{ inputs.use-leading-zeros }}")
+        $numberOfLeadingZeros = [int]::Parse("${{ inputs.number-of-leading-zeros }}")
+        
+        Import-Module "${{ github.action_path }}/modules/Get-NextSemver.psm1"
+        Get-NextSemver `
+          -isPrerelease "${{ inputs.prerelease }}" `
+          -prereleaseId "${{ inputs.prerelease-identifier }}" `
+          -owner "${{ inputs.owner }}" `
+          -repo "${{ inputs.repo-name }}" `
+          -branch "${{ inputs.branch }}" `
+          -useLeadingZeros $useLeadingZeros `
+          -numberOfLeadingZeros $numberOfLeadingZeros `
+          -token "${{ inputs.token }}"
