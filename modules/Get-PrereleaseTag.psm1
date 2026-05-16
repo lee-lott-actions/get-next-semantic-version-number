@@ -43,19 +43,21 @@ function Get-PrereleaseTag {
         }      
       }
      } else {
-      Write-Host "Failed to retrieve tags. Status code: $($response.StatusCode)"
-      return [PSCustomObject]@{
-          Success = $false
-          Version = $null
-          Error   = "Failed to retrieve tags. Status code: $($response.StatusCode)"
+       $errorMsg = "Failed to retrieve tags. Status code: $($response.StatusCode)"
+       Write-Host $errorMsg
+       return [PSCustomObject]@{
+           Success = $false
+           Version = $null
+           Error   = $errorMsg
       }
      }  
   } catch {
-    Write-Host "Failed to retrieve pre-release tags: $_"
+    $errorMsg = "Failed to retrieve pre-release tags. Exception: $($_.Exception.Message)" 
+    Write-Host $errorMsg
     return [PSCustomObject]@{
         Success = $false
         Version = $null
-        Error   = "Exception: $($_.Exception.Message)"
+        Error   = $errorMsg
     }
   }  
 }

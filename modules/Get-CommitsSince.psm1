@@ -41,25 +41,26 @@ function Get-CommitsSince {
                 Error    = $null
             }
         } else {
-            $msg = if ($type -eq "commits") {
+            $errorMsg = if ($type -eq "commits") {
                 "Failed to retrieve commits. Status code: $($response.StatusCode)"
             } else {
                 "Failed to retrieve commits from compare endpoint. Status code: $($response.StatusCode)"
             }
         
-            Write-Host $msg
+            Write-Host $errorMsg
             return [PSCustomObject]@{
                 Success  = $false
                 Messages = $null
-                Error    = $msg
+                Error    = $errorMsg
             }
         }
     } catch {
-        Write-Host "Failed to retrieve commits: $_"
+        $errorMsg = "Failed to retrieve commits. Exception: $($_.Exception.Message)"
+        Write-Host $errorMsg
         return [PSCustomObject]@{
             Success  = $false
             Messages = $null
-            Error    = "Exception: $($_.Exception.Message)"
+            Error    = $errorMsg
         }
     }
 }
