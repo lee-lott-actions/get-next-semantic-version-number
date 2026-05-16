@@ -20,7 +20,7 @@ Describe "Get-CommitsSince" {
     }	
 
 	Context "Success Cases" {
-		It "returns commit messages from compare endpoint" {
+		It "unit: Get-CommitsSince returns commit messages from compare endpoint" {
 	        Mock Invoke-WebRequest {
 	            [PSCustomObject]@{
 	                StatusCode = 200
@@ -39,7 +39,7 @@ Describe "Get-CommitsSince" {
 	        $result.Error | Should -Be $null
 	    }
 	
-	    It "returns all commit messages from the branch" {
+	    It "unit: Get-CommitsSince returns all commit messages from the branch" {
 	        Mock Invoke-WebRequest {
 	            [PSCustomObject]@{
 	                StatusCode = 200
@@ -56,7 +56,7 @@ Describe "Get-CommitsSince" {
 	        $result.Error | Should -Be $null
 	    }
 	
-	    It "returns an empty array when there are no commits" {
+	    It "unit: Get-CommitsSince returns an empty array when there are no commits" {
 	        Mock Invoke-WebRequest {
 	            [PSCustomObject]@{
 	                StatusCode = 200
@@ -72,7 +72,7 @@ Describe "Get-CommitsSince" {
 	}
 	
     Context "Failure Cases" {
-	    It "handles a failed API call (non-200 status code) with FromRef set" {
+	    It "unit: Get-CommitsSince fails wil non-200 API call and FromRef set" {
 	        Mock Invoke-WebRequest {
 	            [PSCustomObject]@{
 	                StatusCode = 404
@@ -86,7 +86,7 @@ Describe "Get-CommitsSince" {
 	        $result.Error | Should -Match "Failed to retrieve commits from compare endpoint. Status code: 404"
 	    }
 
-	    It "handles a failed API call (non-200 status code) with FromRef not set" {
+	    It "unit: Get-CommitsSince fails with non-200 API call and FromRef not set" {
 	        Mock Invoke-WebRequest {
 	            [PSCustomObject]@{
 	                StatusCode = 404
@@ -102,7 +102,7 @@ Describe "Get-CommitsSince" {
 	}
 
 	Context "Exception Failure Cases" {
-	    It "handles an exception thrown by Invoke-WebRequest" {
+	    It "unit: Get-CommitsSince fails with exception" {
 	        Mock Invoke-WebRequest { throw "Network Error" } -ModuleName Get-CommitsSince
 	
 	        $result = Get-CommitsSince -owner $owner -repo $repo -branch $branch -token $token -FromRef "v1.2.3" -githubApiUrl $MockApiUrl
@@ -113,7 +113,7 @@ Describe "Get-CommitsSince" {
 	}
 
 	Context "Encoded Ref Cases" {
-	    It "encodes branch name with slashes in commits endpoint" {
+	    It "unit: Get-CommitsSince encodes branch name with slashes in commits endpoint" {
 	        Mock Invoke-WebRequest {
 	           	param($Uri)
 	           	$script:lastRequestUrl = $Uri
@@ -133,7 +133,7 @@ Describe "Get-CommitsSince" {
 			$script:lastRequestUrl | Should -Match "sha=feature%2Fmy-branch"
 	    }  	
 		
-		It "encodes branch name with slashes in compare endpoint" {
+		It "unit: Get-CommitsSince encodes branch name with slashes in compare endpoint" {
 			Mock Invoke-WebRequest {
 				param($Uri)
 				$script:lastRequestUrl = $Uri
@@ -155,7 +155,7 @@ Describe "Get-CommitsSince" {
 			$script:lastRequestUrl | Should -Match "\.\.\.feature%2Fmy-branch"
 		}
 	
-		 It "encodes FromRef with slashes in compare endpoint" {
+		 It "unit: Get-commitsSince encodes FromRef with slashes in compare endpoint" {
 			Mock Invoke-WebRequest {
 				param($Uri)
 				$script:lastRequestUrl = $Uri
