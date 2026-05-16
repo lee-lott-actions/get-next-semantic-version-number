@@ -46,7 +46,7 @@ function Get-LastStableTag {
             }
         }
     } catch {
-        $errorMsg = "Failed to retrieve stable tags. Exception: $($_Exception.Message)"
+        $errorMsg = "Failed to retrieve stable tags. Exception: $($_.Exception.Message)"
         Write-Host $errorMsg
         return [PSCustomObject]@{
             Success = $false
