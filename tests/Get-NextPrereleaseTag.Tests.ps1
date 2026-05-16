@@ -2,13 +2,18 @@ Import-Module "$PSScriptRoot/../modules/Get-NextPrereleaseTag.psm1" -Force
 
 Describe "Get-NextPrereleaseTag" {
     Context "Leading Zeros Cases" {
+        BeforeEach {
+            $useLeadingZeros = $true
+            $numberOfLeadingZeros = 4
+        }
+        
         It "unit: Get-NextPrereleaseTag returns the next prerelease tag when highest is .0005" {
             $tags = @(
                 @{ name = "v1.2.3-dev.0001" },
                 @{ name = "v1.2.3-dev.0005" },
                 @{ name = "v1.2.3-dev.0003" }
             )
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $true -numberOfLeadingZeros 4
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-dev.0006"
         }
     
@@ -16,7 +21,7 @@ Describe "Get-NextPrereleaseTag" {
             $tags = @(
                 @{ name = "v1.2.3-dev.0001" }
             )
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $true -numberOfLeadingZeros 4
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-dev.0002"
         }
     
@@ -24,13 +29,13 @@ Describe "Get-NextPrereleaseTag" {
             $tags = @(
                 @{ name = "v1.2.2-dev.0001" }
             )
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $true -numberOfLeadingZeros 4
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-dev.0001"
         }
     
         It "unit: Get-NextPrereleaseTag returns .0001 if no tags exist at all" {
             $tags = @()
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $true -numberOfLeadingZeros 4
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-dev.0001"
         }
     
@@ -40,7 +45,7 @@ Describe "Get-NextPrereleaseTag" {
                 @{ name = "v1.2.3" },
                 @{ name = "v1.2.3-dev.0001" }
             )
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $true -numberOfLeadingZeros 4
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-dev.0002"
         }
     
@@ -49,19 +54,24 @@ Describe "Get-NextPrereleaseTag" {
                 @{ name = "v1.2.3-rc.0002" },
                 @{ name = "v1.2.3-rc.0005" }
             )
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "rc" -useLeadingZeros $true -numberOfLeadingZeros 4
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "rc" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-rc.0006"
         }
     }
 
     Context "Non Leading Zeros Cases" {
+         BeforeEach {
+            $useLeadingZeros = $false
+            $numberOfLeadingZeros = 1
+        }
+        
         It "unit: Get-NextPrereleaseTag returns the next prerelease tag when highest is .5" {
             $tags = @(
                 @{ name = "v1.2.3-dev.1" },
                 @{ name = "v1.2.3-dev.5" },
                 @{ name = "v1.2.3-dev.3" }
             )
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $false -numberOfLeadingZeros 1
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-dev.6"
         }
     
@@ -69,7 +79,7 @@ Describe "Get-NextPrereleaseTag" {
             $tags = @(
                 @{ name = "v1.2.3-dev.1" }
             )
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $false -numberOfLeadingZeros 1
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-dev.2"
         }
     
@@ -77,13 +87,13 @@ Describe "Get-NextPrereleaseTag" {
             $tags = @(
                 @{ name = "v1.2.2-dev.1" }
             )
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $false -numberOfLeadingZeros 1
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-dev.1"
         }
     
         It "unit: Get-NextPrereleaseTag returns .1 if no tags exist at all" {
             $tags = @()
-            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $false -numberOfLeadingZeros 1
+            $result = Get-NextPrereleaseTag -tags $tags -baseVersion "v1.2.3" -prereleaseId "dev" -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
             $result | Should -Be "v1.2.3-dev.1"
         }
     }    
