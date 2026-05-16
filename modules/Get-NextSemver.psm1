@@ -34,9 +34,10 @@ function Get-NextSemver {
 
     $lastStableTagResult = Get-LastStableTag -owner $owner -repo $repo -token $token -githubApiUrl $githubApiUrl
     if (-not $lastStableTagResult.Success) {
+        $errorMsg = "Get-LastStableTag failed: $($lastStableTagResult.Error)" 
         Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
-        Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Get-LastStableTag failed: $($lastStableTagResult.Error)"
-        Write-Host "Get-LastStableTag failed: $($lastStableTagResult.Error)"
+        Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
+        Write-Host $errorMsg
         return
     }
 
@@ -49,9 +50,10 @@ function Get-NextSemver {
 
     $commitsResult = Get-CommitsSince -owner $owner -repo $repo -branch $branch -token $token -FromRef $lastStableTag -githubApiUrl $githubApiUrl
     if (-not $commitsResult.Success) {
+        $errorMsg = "Get-CommitsSince failed: $($commitsResult.Error)" 
         Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
-        Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Get-CommitsSince failed: $($commitsResult.Error)"
-        Write-Host "Get-CommitsSince failed: $($commitsResult.Error)"
+        Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
+        Write-Host $errorMsg
         return
     }
 
@@ -63,9 +65,10 @@ function Get-NextSemver {
     
     $nextVersionResult = Get-NextVersion -stableTag $lastStableTag -bump $bump -isPrerelease $isPrerelease -prereleaseId $prereleaseId -owner $owner -repo $repo -token $token -githubApiUrl $githubApiUrl -useLeadingZeros $useLeadingZeros -numberOfLeadingZeros $numberOfLeadingZeros
     if (-not $nextVersionResult.Success) {
+        $errorMsg = "Get-NextVersion failed: $($nextVersionResult.Error)"
         Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
-        Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Get-NextVersion failed: $($nextVersionResult.Error)"
-        Write-Host "Get-NextVersion failed: $($nextVersionResult.Error)"
+        Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
+        Write-Host $errorMsg
         return
     }
 
