@@ -109,7 +109,7 @@ Describe "Get-LastStableTag" {
             $result = Get-LastStableTag -owner $owner -repo $repo -token $token -githubApiUrl $MockApiUrl
             $result.Success | Should -Be $false
             $result.Tag | Should -Be $null
-            $result.Error | Should -Match "Exception: Network Error"
+            $result.Error | Should -Match "Failed to retrieve stable tags. Exception: Network Error"
         }
     }
 }
