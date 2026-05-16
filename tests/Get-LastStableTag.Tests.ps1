@@ -34,7 +34,7 @@ Describe "Get-LastStableTag" {
                 }
             } -ModuleName Get-LastStableTag
             
-            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -MockApiUrl $MockApiUrl
+            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -githubApiUrl $MockApiUrl
             $result.Success | Should -Be $true
             $result.Tag | Should -Be "v2.0.1"
             $result.Error | Should -Be $null
@@ -51,7 +51,7 @@ Describe "Get-LastStableTag" {
                 }
             } -ModuleName Get-LastStableTag
             
-            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -MockApiUrl $MockApiUrl
+            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -githubApiUrl $MockApiUrl
             $result.Success | Should -Be $true
             $result.Tag | Should -Be $null
             $result.Error | Should -Be $null
@@ -68,7 +68,7 @@ Describe "Get-LastStableTag" {
                 }
             } -ModuleName Get-LastStableTag
             
-            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -MockApiUrl $MockApiUrl
+            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -githubApiUrl $MockApiUrl
             $result.Success | Should -Be $true
             $result.Tag | Should -Be "v0.1.0"
             $result.Error | Should -Be $null
@@ -81,7 +81,7 @@ Describe "Get-LastStableTag" {
                     Content = ConvertTo-Json @()
                 }
             } -ModuleName Get-LastStableTag
-            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -MockApiUrl $MockApiUrl
+            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -githubApiUrl $MockApiUrl
             $result.Success | Should -Be $true
             $result.Tag | Should -Be $null
             $result.Error | Should -Be $null
@@ -96,7 +96,7 @@ Describe "Get-LastStableTag" {
                     Content = ""
                 }
             } -ModuleName Get-LastStableTag
-            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -MockApiUrl $MockApiUrl
+            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -githubApiUrl $MockApiUrl
             $result.Success | Should -Be $false
             $result.Tag | Should -Be $null
             $result.Error | Should -Match "Failed to retrieve tags. Status code: 404"
@@ -106,7 +106,7 @@ Describe "Get-LastStableTag" {
     Context "Exception Failure Cases" {
         It "unit: Get-LastStableTag fails with exception" {
             Mock Invoke-WebRequest { throw "Network Error" } -ModuleName Get-LastStableTag
-            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -MockApiUrl $MockApiUrl
+            $result = Get-LastStableTag -owner $owner -repo $repo -token $token -githubApiUrl $MockApiUrl
             $result.Success | Should -Be $false
             $result.Tag | Should -Be $null
             $result.Error | Should -Match "Exception: Network Error"
