@@ -37,19 +37,21 @@ function Get-LastStableTag {
                 Error   = $null
             }
         } else {
-            Write-Host "Failed to retrieve tags. Status code: $($response.StatusCode)"
+            $errorMsg = "Failed to retrieve tags. Status code: $($response.StatusCode)"
+            Write-Host $errorMsg
             return [PSCustomObject]@{
                 Success = $false
                 Tag     = $null
-                Error   = "Failed to retrieve tags. Status code: $($response.StatusCode)"
+                Error   = $errorMsg
             }
         }
     } catch {
-        Write-Host "Failed to retrieve stable tags: $_"
+        $errorMsg = "Failed to retrieve stable tags. Exception: $($_Exception.Message)"
+        Write-Host $errorMsg
         return [PSCustomObject]@{
             Success = $false
             Tag     = $null
-            Error   = "Exception: $($_.Exception.Message)"
+            Error   = $errorMsg
         }
     }
 }
