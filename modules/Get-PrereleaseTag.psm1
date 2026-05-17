@@ -21,8 +21,8 @@ function Get-PrereleaseTag {
       "X-GitHub-Api-Version" = "2026-03-10"      
   }
 
-  try { 
-    $response = Invoke-WebRequest -Uri $tagsUrl -Headers $headers -Method GET
+  try {    
+    $response = Invoke-WebRequest -Uri $tagsUrl -Headers $headers -Method GET -SkipHttpErrorCheck
 
     if ($response.StatusCode -eq 200) {
       $tags = $response.Content | ConvertFrom-Json

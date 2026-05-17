@@ -26,7 +26,7 @@ function Get-CommitsSince {
             $type = "compare"
         }
 
-        $response = Invoke-WebRequest -Uri $url -Headers $headers -Method GET
+        $response = Invoke-WebRequest -Uri $url -Headers $headers -Method GET -SkipHttpErrorCheck
 
         if ($response.StatusCode -eq 200) {
             $json = $response.Content | ConvertFrom-Json

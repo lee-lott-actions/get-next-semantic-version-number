@@ -14,7 +14,8 @@ function Get-LastStableTag {
     }
 
     try {
-        $response = Invoke-WebRequest -Uri $tagsUrl -Headers $headers -Method GET
+        $response = Invoke-WebRequest -Uri $tagsUrl -Headers $headers -Method GET -SkipHttpErrorCheck
+        
         if ($response.StatusCode -eq 200) {
             $tags = $response.Content | ConvertFrom-Json
             $stableTags = $tags | Where-Object { $_.name -match "^v\d+\.\d+\.\d+$" }
