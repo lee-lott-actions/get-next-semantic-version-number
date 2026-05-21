@@ -17,7 +17,7 @@ function Get-PrereleaseTag {
   $tagsUrl = "$githubApiUrl/repos/$owner/$repo/tags?per_page=100"
   $headers = @{
       Authorization = "Bearer $token"
-      Accept = "application/vnd.github.v3+json"
+      Accept = "application/vnd.github+json"
       "X-GitHub-Api-Version" = "2026-03-10"      
   }
 
